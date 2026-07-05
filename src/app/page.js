@@ -1,9 +1,12 @@
 
+import Navbar from "@/components/layout/Navbar";
+import HeroSection from "@/components/sections/HeroSection";
 
-const page = () => {
+export default function Home() {
   return (
-    <div className="">This is from the Hand Craft BE</div>
-  )
+    <>
+      <Navbar />
+      <HeroSection />
+    </>
+  );
 }
-
-export default page
