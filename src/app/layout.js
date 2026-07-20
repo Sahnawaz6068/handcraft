@@ -1,5 +1,7 @@
 import { Fraunces, Manrope, Space_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -32,7 +34,12 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${fraunces.variable} ${manrope.variable} ${spaceMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <Navbar/>
+        {children}
+        <Footer/>
+        </body>
+        
     </html>
   );
 }

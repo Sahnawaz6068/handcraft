@@ -1,136 +1,104 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-const TRUST_ITEMS = [
-  { value: "500+", label: "Verified makers" },
-  { value: "BIS", label: "Hallmarked only" },
-  { value: "7-day", label: "Easy returns" },
-];
-
-function CornerBracket({ className }) {
+const HeroSection = () => {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className={className}
-      aria-hidden="true"
-    >
-      <path
-        d="M1 9V1H9"
-        stroke="#C9A961"
-        strokeWidth="1.5"
-        fill="none"
-      />
-    </svg>
-  );
-}
+    <section className="relative overflow-hidden bg-[#faf7f2]">
+      {/* Background Blur */}
+      <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-amber-200/30 blur-3xl" />
+      <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-orange-200/20 blur-3xl" />
 
-function GemCard({ className, tone = "ink" }) {
-  const bg = tone === "gold" ? "bg-[#C9A961]/15" : "bg-[#1C1917]";
-  return (
-    <div className={`relative ${className}`}>
-      <div
-        className={`h-full w-full rounded-sm border border-[#C9A961]/20 ${bg}`}
-      />
-      <CornerBracket className="absolute -top-px -left-px h-4 w-4" />
-      <CornerBracket className="absolute -top-px -right-px h-4 w-4 rotate-90" />
-      <CornerBracket className="absolute -bottom-px -left-px h-4 w-4 -rotate-90" />
-      <CornerBracket className="absolute -bottom-px -right-px h-4 w-4 rotate-180" />
-    </div>
-  );
-}
+      <div className="relative mx-auto flex max-w-7xl flex-col-reverse items-center gap-14 px-6 py-24 lg:flex-row">
+        {/* Left Content */}
+        <div className="flex-1">
+          <span className="inline-flex items-center rounded-full border border-amber-300 bg-white px-4 py-2 text-sm font-medium text-amber-700 shadow-sm">
+            ✨ Trusted by 500+ Independent Jewelry Artists
+          </span>
 
-export default function HeroSection() {
-  return (
-    <section className="relative bg-[#12100E] overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-14 lg:gap-10 items-center">
-          {/* Left column */}
-          <div>
-            <span
-              className="inline-block text-[11px] tracking-[0.2em] text-[#C9A961] mb-6"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              A MULTI-VENDOR JEWELRY HOUSE
+          <h1 className="mt-7 text-5xl font-bold leading-tight text-gray-900 md:text-6xl">
+            Handcrafted with Passion,
+            <br />
+            <span className="text-amber-700">
+              Crafted by Real Artisans.
             </span>
+          </h1>
 
-            <h1
-              className="text-[#F5F1E8] text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] mb-6"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Every piece, traced
-              <br />
-              back to the{" "}
-              <span className="italic text-[#C9A961]">hands</span>
-              <br />
-              that made it.
-            </h1>
+          <p className="mt-6 max-w-xl text-lg leading-8 text-gray-600">
+            Discover handcrafted rings, necklaces, earrings, bracelets,
+            and timeless creations from talented independent makers across
+            the country. Every piece is unique. Every purchase supports an
+            artisan.
+          </p>
 
-            <p className="text-[#8A8478] text-base sm:text-lg max-w-md mb-10 leading-relaxed">
-              Shop rings, chains, and gemstones from independent jewellers
-              across India. Each maker verified, each piece hallmarked, no
-              middlemen in between.
-            </p>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <button className="rounded-xl bg-amber-700 px-8 py-4 font-semibold text-white transition hover:bg-amber-800">
+              Shop Collection
+            </button>
 
-            <div className="flex flex-wrap items-center gap-4 mb-12">
-              <Button
-                size="lg"
-                className="bg-[#C9A961] text-[#12100E] hover:bg-[#E4C989] rounded-sm px-6"
-                asChild
-              >
-                <Link href="/products">
-                  Shop the edit
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-[#C9A961]/40 text-[#F5F1E8] hover:bg-[#C9A961]/10 hover:border-[#C9A961] rounded-sm px-6"
-                asChild
-              >
-                <Link href="/vendors">Meet the makers</Link>
-              </Button>
-            </div>
-
-            {/* Trust strip */}
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-              {TRUST_ITEMS.map((item, i) => (
-                <div key={item.label} className="flex items-center gap-8">
-                  <div>
-                    <p
-                      className="text-[#F5F1E8] text-lg"
-                      style={{ fontFamily: "var(--font-display)" }}
-                    >
-                      {item.value}
-                    </p>
-                    <p className="text-[#8A8478] text-xs mt-0.5">
-                      {item.label}
-                    </p>
-                  </div>
-                  {i < TRUST_ITEMS.length - 1 && (
-                    <span className="hidden sm:block h-8 w-px bg-[#C9A961]/15" />
-                  )}
-                </div>
-              ))}
-            </div>
+            <button className="rounded-xl border border-gray-300 bg-white px-8 py-4 font-semibold text-gray-800 transition hover:border-amber-700 hover:text-amber-700">
+              Become a Seller
+            </button>
           </div>
 
-          {/* Right column — layered gem cards standing in for product photography */}
-          <div className="relative h-[420px] sm:h-[480px] lg:h-[520px]">
-            <GemCard className="absolute top-0 right-0 h-[62%] w-[70%]" />
-            <GemCard
-              className="absolute bottom-0 left-0 h-[55%] w-[60%]"
-              tone="gold"
+          <div className="mt-12 flex flex-wrap gap-10">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">15K+</h2>
+              <p className="text-gray-600">Unique Products</p>
+            </div>
+
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">600+</h2>
+              <p className="text-gray-600">Verified Artisans</p>
+            </div>
+
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">50K+</h2>
+              <p className="text-gray-600">Happy Customers</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Images */}
+        <div className="relative flex flex-1 items-center justify-center">
+          <div className="grid grid-cols-2 gap-5">
+            <img
+              src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=600&q=80"
+              alt=""
+              className="h-72 w-56 rounded-3xl object-cover shadow-2xl"
             />
-            {/*
-              Replace GemCard placeholders with next/image product photography, e.g.:
-              <Image src="/hero/ring.jpg" alt="" fill className="object-cover" />
-              Keep the CornerBracket overlay for the hallmark-card signature look.
-            */}
+
+            <img
+              src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=600&q=80"
+              alt=""
+              className="mt-16 h-80 w-56 rounded-3xl object-cover shadow-2xl"
+            />
+
+            <img
+              src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=600&q=80"
+              alt=""
+              className="-mt-8 h-72 w-56 rounded-3xl object-cover shadow-2xl"
+            />
+
+            <img
+              src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=600&q=80"
+              alt=""
+              className="h-72 w-56 rounded-3xl object-cover shadow-2xl"
+            />
+          </div>
+
+          {/* Floating Card */}
+          <div className="absolute -left-10 bottom-8 rounded-2xl bg-white p-5 shadow-2xl">
+            <div className="text-sm text-gray-500">
+              Featured Artisan
+            </div>
+            <h3 className="mt-1 font-semibold text-gray-900">
+              Aanya Jewelry Studio
+            </h3>
+            <p className="mt-2 text-sm text-gray-500">
+              ⭐ 4.9 • 3,000+ Sales
+            </p>
           </div>
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default HeroSection;
