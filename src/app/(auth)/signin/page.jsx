@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff, Lock, User } from "lucide-react";
+import Link from 'next/link';
 
 const Page = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -88,12 +89,12 @@ const Page = () => {
                     Password
                   </label>
 
-                  <a
+                  <Link
                     href="/forgot-password"
                     className="text-sm font-medium text-amber-700 hover:text-amber-800"
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
 
                 <div className="relative">
@@ -136,12 +137,12 @@ const Page = () => {
 
             <p className="mt-8 text-center text-sm text-gray-600">
               Don't have an account?{" "}
-              <a
+              <Link
                 href="/signup"
                 className="font-semibold text-amber-700 hover:text-amber-800"
               >
                 Create one
-              </a>
+              </Link>
             </p>
           </div>
         </div>

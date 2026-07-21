@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, EyeOff, Lock, Mail, Phone, User, ImagePlus, Link } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, Phone, User, ImagePlus } from "lucide-react";
+import Link from 'next/link';
 
 const page = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -91,9 +92,9 @@ const page = () => {
             </span>
 
             <h1 className="mt-6 text-3xl font-bold leading-tight text-gray-900">
-              Start your journey,
+              Shop unique pieces, 
               <br />
-              <span className="text-amber-700">with real artisans.</span>
+              <span className="text-amber-700">or start selling your own.</span>
             </h1>
 
             {error && (
@@ -246,12 +247,12 @@ const page = () => {
 
             <p className="mt-8 text-center text-sm text-gray-600">
               Already have an account?{" "}
-              <a
+              <Link
                 href="/signin"
                 className="font-semibold text-amber-700 hover:text-amber-800"
               >
                 Sign in
-              </a>
+              </Link>
             </p>
           </div>
         </div>

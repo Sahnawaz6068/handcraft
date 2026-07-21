@@ -13,6 +13,8 @@ import {
   BarChart3,
 } from "lucide-react";
 
+import Link from 'next/link';
+
 
 const DEFAULT_LINKS = [
   { label: "Products", href: "#products", megaMenu: true },
@@ -57,7 +59,7 @@ const MEGA_MENU_SECTIONS = [
 ];
 
 const Navbar = ({
-  logoText = "Brandmark",
+  logoText = "HandCraft",
   links = DEFAULT_LINKS,
   onSearch,
 }) => {
@@ -150,14 +152,14 @@ const Navbar = ({
       >
       <div className="mx-auto flex h-14 items-center justify-between px-4 sm:px-5">
         {/* Logo */}
-        <a
-          href="#home"
+        <Link
+          href="/"
           className={`text-lg font-semibold tracking-tight ${
             dark ? "text-white" : "text-slate-950"
           }`}
         >
           {logoText}
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <nav className="relative hidden md:block" ref={megaRef}>
