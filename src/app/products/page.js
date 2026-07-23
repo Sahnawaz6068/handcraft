@@ -1,9 +1,24 @@
+"use client";
 import ProductCard from "@/components/products/ProductCard";
-import {RESPONSE_DATA} from "../../lib/mockData"
-
+import { RESPONSE_DATA } from "../../lib/mockData";
+import { useState } from "react";
+import FilterSidebar from "@/components/products/FilterSidebar";
 
 const Page = () => {
   const products = RESPONSE_DATA.products;
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const toggleCategory = (value) => {
+    setSelectedCategories((prev) =>
+      prev.includes(value) ? prev.filter((c) => c !== value) : [...prev, value],
+    );
+  };
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+  };
+
+  const hasActiveFilters = selectedCategories.length > 0;
 
   return (
     <section className="min-h-screen bg-[#faf7f2] px-6 py-24">
@@ -12,10 +27,20 @@ const Page = () => {
           Handcrafted <span className="text-amber-700">Jewelry</span>
         </h1>
 
-        <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3">
-          {products.map((product) => (
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr]">
+          <aside>
+            <FilterSidebar
+              selectedCategories={selectedCategories}
+              toggleCategory={toggleCategory}
+              clearFilters={clearFilters}
+              hasActiveFilters={hasActiveFilters}
+            />
+          </aside>
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
+            {products.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
+          </div>
         </div>
       </div>
     </section>
