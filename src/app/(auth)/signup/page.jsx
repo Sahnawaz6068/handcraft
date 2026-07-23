@@ -66,7 +66,7 @@ const page = () => {
       <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-amber-200/30 blur-3xl" />
       <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-orange-200/20 blur-3xl" />
 
-      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col-reverse items-center gap-14 px-6 py-16 lg:flex-row">
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col-reverse items-center gap-14 px-6 py-12 lg:flex-row">
         {/* Left Image Panel */}
         <div className="relative hidden flex-1 items-center justify-center lg:flex">
           <img
@@ -85,7 +85,7 @@ const page = () => {
         </div>
 
         {/* Right Form Panel */}
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 mt-10 items-center justify-center">
           <div className="w-full max-w-md rounded-3xl bg-white p-10 shadow-2xl">
             <span className="inline-flex items-center rounded-full border border-amber-300 bg-white px-4 py-2 text-sm font-medium text-amber-700 shadow-sm">
               ✨ Create your account
