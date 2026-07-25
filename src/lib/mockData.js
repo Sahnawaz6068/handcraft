@@ -54,7 +54,14 @@
       numReviews: 0,
       productImageUrl: [
         "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTFXxIx1YeJVZBsLYPNt4a7sJsmaOFf39CrF2KDvoGqunnoAaLFiQmF6uQUQuFtMAsaCvLHBb8T6-Ag36ziZcf8D3Pni8Yqw0QAITLZ4RkS8U-27cL335B7",
-        "https://example.com/images/jhumka-side.jpg",
+        "https://cdn.phototourl.com/free/2026-07-21-6fb7419b-8e88-4742-a584-54d11659874f.jpg",
+        "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTFXxIx1YeJVZBsLYPNt4a7sJsmaOFf39CrF2KDvoGqunnoAaLFiQmF6uQUQuFtMAsaCvLHBb8T6-Ag36ziZcf8D3Pni8Yqw0QAITLZ4RkS8U-27cL335B7",
+        "https://cdn.phototourl.com/free/2026-07-21-6fb7419b-8e88-4742-a584-54d11659874f.jpg",
+        "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTFXxIx1YeJVZBsLYPNt4a7sJsmaOFf39CrF2KDvoGqunnoAaLFiQmF6uQUQuFtMAsaCvLHBb8T6-Ag36ziZcf8D3Pni8Yqw0QAITLZ4RkS8U-27cL335B7",
+        "https://cdn.phototourl.com/free/2026-07-21-6fb7419b-8e88-4742-a584-54d11659874f.jpg",
+        "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTFXxIx1YeJVZBsLYPNt4a7sJsmaOFf39CrF2KDvoGqunnoAaLFiQmF6uQUQuFtMAsaCvLHBb8T6-Ag36ziZcf8D3Pni8Yqw0QAITLZ4RkS8U-27cL335B7",
+        "https://cdn.phototourl.com/free/2026-07-21-6fb7419b-8e88-4742-a584-54d11659874f.jpg",
+        
       ],
       tags: ["silver", "oxidized", "earrings", "traditional"],
       status: "active",

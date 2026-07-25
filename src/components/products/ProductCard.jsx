@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import Link from "next/link";
 
 const ProductCard = ({ product }) => {
   const hasDiscount =
@@ -9,6 +10,10 @@ const ProductCard = ({ product }) => {
   );
 
   return (
+      <Link
+      href={`/products/${product.slug}`}
+      className="group block overflow-hidden rounded-3xl bg-white shadow-lg transition hover:shadow-2xl"
+    >
     <div className="group overflow-hidden rounded-3xl bg-white shadow-lg transition hover:shadow-2xl">
       <div className="relative aspect-square overflow-hidden bg-gray-100">
         <img
@@ -66,6 +71,7 @@ const ProductCard = ({ product }) => {
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 
