@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const HeroSection = () => {
   return (
     <section className="relative overflow-hidden bg-[#faf7f2]">
@@ -28,9 +30,9 @@ const HeroSection = () => {
           </p>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <button className="rounded-xl bg-amber-700 px-8 py-4 font-semibold text-white transition hover:bg-amber-800">
+            <Link href={"/products"} className="rounded-xl bg-amber-700 px-8 py-4 font-semibold text-white transition hover:bg-amber-800">
               Shop Collection
-            </button>
+            </Link>
 
             <button className="rounded-xl border border-gray-300 bg-white px-8 py-4 font-semibold text-gray-800 transition hover:border-amber-700 hover:text-amber-700">
               Become a Seller

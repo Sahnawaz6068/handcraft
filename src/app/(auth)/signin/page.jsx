@@ -2,17 +2,49 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff, Lock, User } from "lucide-react";
-import Link from 'next/link';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
+
 
 const Page = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // TODO: call auth API with { identifier, password }
-  };
+  const { signIn } = useAuth();
+  const router = useRouter();
+
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setFormError(null);
+
+  if (!identifier.trim() || !password) {
+    setFormError("Please enter your email/phone and password.");
+    toast.error("Please enter your email/phone and password.");
+    return;
+  }
+
+  setSubmitting(true);
+  try {
+    const data = await toast.promise(
+      signIn({ identifier: identifier.trim(), password }),
+      {
+        loading: "Signing you in...",
+        success: (data) => `Welcome back, ${data?.user?.name || "there"}!`,
+        error: (err) => err?.message || "Sign in failed. Please try again.",
+      }
+    );
+    router.push("/products");
+  } catch (err) {
+    setFormError(err.message || "Sign in failed. Please try again.");
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#faf7f2]">
@@ -28,8 +60,6 @@ const Page = () => {
             alt="Jewelry"
             className="h-[520px] w-[420px] rounded-3xl object-cover shadow-2xl"
           />
-
-          {/* Floating Card */}
           <div className="absolute -bottom-6 -left-10 rounded-2xl bg-white p-5 shadow-2xl">
             <div className="text-sm text-gray-500">Welcome back to</div>
             <h3 className="mt-1 font-semibold text-gray-900">HandCraft</h3>
@@ -49,9 +79,7 @@ const Page = () => {
             <h1 className="mt-6 text-3xl font-bold leading-tight text-gray-900">
               Welcome back,
               <br />
-              <span className="text-amber-700">
-                let's get you signed in.
-              </span>
+              <span className="text-amber-700">let's get you signed in.</span>
             </h1>
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
@@ -63,10 +91,8 @@ const Page = () => {
                 >
                   Email or phone number
                 </label>
-
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-
                   <input
                     id="identifier"
                     type="text"
@@ -74,7 +100,8 @@ const Page = () => {
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     placeholder="you@example.com or 98765 43210"
-                    className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-12 pr-4 text-gray-900 outline-none transition focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
+                    disabled={submitting}
+                    className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-12 pr-4 text-gray-900 outline-none transition focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20 disabled:opacity-60"
                   />
                 </div>
               </div>
@@ -88,7 +115,6 @@ const Page = () => {
                   >
                     Password
                   </label>
-
                   <Link
                     href="/forgot-password"
                     className="text-sm font-medium text-amber-700 hover:text-amber-800"
@@ -96,10 +122,8 @@ const Page = () => {
                     Forgot password?
                   </Link>
                 </div>
-
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -107,9 +131,9 @@ const Page = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-12 pr-12 text-gray-900 outline-none transition focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
+                    disabled={submitting}
+                    className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-12 pr-12 text-gray-900 outline-none transition focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20 disabled:opacity-60"
                   />
-
                   <button
                     type="button"
                     onClick={() => setShowPassword((s) => !s)}
@@ -127,11 +151,18 @@ const Page = () => {
                 </div>
               </div>
 
+              {formError && (
+                <p role="alert" className="text-sm font-medium text-red-600">
+                  {formError}
+                </p>
+              )}
+
               <button
                 type="submit"
-                className="w-full rounded-xl bg-amber-700 px-8 py-4 font-semibold text-white transition hover:bg-amber-800"
+                disabled={submitting}
+                className="w-full rounded-xl bg-amber-700 px-8 py-4 font-semibold text-white transition hover:bg-amber-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Sign In
+                {submitting ? "Signing in..." : "Sign In"}
               </button>
             </form>
 

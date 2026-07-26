@@ -2,6 +2,8 @@ import { Fraunces, Manrope, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { AuthProvider } from "@/context/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -35,11 +37,13 @@ export default function RootLayout({ children }) {
       className={`${fraunces.variable} ${manrope.variable} ${spaceMono.variable}`}
     >
       <body>
-        <Navbar/>
-        {children}
-        <Footer/>
-        </body>
-        
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Footer />
+          <Toaster position="top-right" />
+        </AuthProvider>
+      </body>
     </html>
   );
 }

@@ -2,12 +2,14 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff, Lock, Mail, Phone, User, ImagePlus } from "lucide-react";
-import Link from 'next/link';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 
 const page = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -17,6 +19,9 @@ const page = () => {
     avatar: "",
   });
 
+  const { signUp, signIn } = useAuth();
+  const router = useRouter();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -24,37 +29,33 @@ const page = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
 
-    // Build payload — role and avatar are optional, only sent if provided
+    if (!formData.name.trim() || !formData.email.trim() || !formData.password) {
+      toast.error("Name, email, and password are required.");
+      return;
+    }
+
     const payload = {
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
       password: formData.password,
       ...(formData.avatar && { avatar: formData.avatar }),
     };
 
+    setLoading(true);
+
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      await toast.promise(signUp(payload), {
+        loading: "Creating your account...",
+        success: "Account created! Check your email for the OTP.",
+        error: (err) =>
+          err?.message || "Registration failed. Please try again.",
       });
 
-      const data = await res.json();
-
-      if (!res.ok || !data?.successResponse?.success) {
-        throw new Error(
-          data?.successResponse?.message || data?.message || "Registration failed"
-        );
-      }
-
-      // data.successResponse.data -> created user (no password)
-      // TODO: redirect to sign in, or auto-login and redirect to dashboard
-    } catch (err) {
-      setError(err.message || "Something went wrong. Please try again.");
+      router.push(`/verify-otp?email=${encodeURIComponent(payload.email)}`);
+    } catch {
+      // error already toasted by toast.promise
     } finally {
       setLoading(false);
     }
@@ -92,17 +93,10 @@ const page = () => {
             </span>
 
             <h1 className="mt-6 text-3xl font-bold leading-tight text-gray-900">
-              Shop unique pieces, 
+              Shop unique pieces,
               <br />
               <span className="text-amber-700">or start selling your own.</span>
             </h1>
-
-            {error && (
-              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                {error}
-              </div>
-            )}
-
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               {/* Name */}
               <div>
@@ -225,7 +219,9 @@ const page = () => {
                     type="button"
                     onClick={() => setShowPassword((s) => !s)}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
