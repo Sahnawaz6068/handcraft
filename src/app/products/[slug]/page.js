@@ -1,28 +1,36 @@
-import { notFound } from "next/navigation";
-import { RESPONSE_DATA } from "@/lib/mockData";
+"use client";
+
+import { useParams, notFound } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getProduct } from "@/lib/api/product";
 import ProductDetail from "@/components/products/ProductDetail";
 
-// swap this for a real fetch/DB call once the backend endpoint is ready:
-// const product = await fetch(`${API_URL}/products/slug/${slug}`).then(r => r.json());
-function getProductBySlug(slug) {
-  return RESPONSE_DATA.products.find((p) => p.slug === slug) ?? null;
-}
+export default function Page() {
+  const { slug } = useParams();
 
-export default async function Page({ params }) {
-  const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        const data = await getProduct(slug);
+        setProduct(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (slug) {
+      loadProduct();
+    }
+  }, [slug]);
+
+  if (loading) return <p>Loading...</p>;
 
   if (!product) return notFound();
 
   return <ProductDetail product={product} />;
-}
-
-export async function generateMetadata({ params }) {
-  const { slug } = await params;
-  const product = getProductBySlug(slug);
-  if (!product) return {};
-  return {
-    title: `${product.productName} | HandCraft`,
-    description: product.productDescription,
-  };
 }

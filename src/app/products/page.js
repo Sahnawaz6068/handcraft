@@ -1,18 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "@/components/products/ProductCard";
 import FilterSidebar from "@/components/products/FilterSidebar";
 import SearchBar from "@/components/products/SearchBar";
 import { RESPONSE_DATA } from "../../lib/mockData";
 import { PRICE_MIN, PRICE_MAX } from "@/lib/constants";
+import {getProducts } from "@/lib/api/product";
 
 const Page = () => {
-  const products = RESPONSE_DATA.products;
+  const [products,setProducts]=useState([]);
+  // const products = RESPONSE_DATA.products;
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState([PRICE_MIN, PRICE_MAX]);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [search, setSearch] = useState("");
+
+  useEffect(()=>{
+    async function loadProducts() {
+      try{
+        const data = await getProducts();
+
+        setProducts(data.products);
+      }catch(err){
+        console.log(err)
+      }
+    }
+    loadProducts();
+  },[])
 
   const toggleCategory = (value) => {
     setSelectedCategories((prev) =>

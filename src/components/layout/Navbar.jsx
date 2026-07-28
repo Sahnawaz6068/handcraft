@@ -19,7 +19,7 @@ import Link from 'next/link';
 const DEFAULT_LINKS = [
   { label: "Products", href: "#products", megaMenu: true },
   { label: "Pricing", href: "#pricing" },
-  { label: "Docs", href: "#docs" },
+  { label: "Cart", href: "#cart" },
   { label: "Company", href: "#company" },
 ];
 
