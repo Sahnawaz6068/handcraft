@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState, useEffect, useRef } from "react";
 import {
   Search,
@@ -13,14 +13,13 @@ import {
   BarChart3,
 } from "lucide-react";
 
-import Link from 'next/link';
-
+import Link from "next/link";
 
 const DEFAULT_LINKS = [
-  { label: "Products", href: "#products", megaMenu: true },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Cart", href: "#cart" },
-  { label: "Company", href: "#company" },
+  { label: "Products", href: "/products" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Cart", href: "/cart" },
+  { label: "Company", href: "/company" },
 ];
 
 const MEGA_MENU_SECTIONS = [
@@ -150,205 +149,210 @@ const Navbar = ({
       <header
         className={`w-full max-w-4xl rounded-full border transition-all duration-300 ${theme.bar}`}
       >
-      <div className="mx-auto flex h-14 items-center justify-between px-4 sm:px-5">
-        {/* Logo */}
-        <Link
-          href="/"
-          className={`text-lg font-semibold tracking-tight ${
-            dark ? "text-white" : "text-slate-950"
-          }`}
-        >
-          {logoText}
-        </Link>
-
-        {/* Desktop nav */}
-        <nav className="relative hidden md:block" ref={megaRef}>
-          <ul className="flex items-center gap-1">
-            {links.map((link) => (
-              <li key={link.label} className="relative">
-                <button
-                  onClick={() => {
-                    handleNavClick(link);
-                    if (link.megaMenu) setMegaOpen((v) => !v);
-                  }}
-                  onMouseEnter={() => link.megaMenu && setMegaOpen(true)}
-                  className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${theme.text} ${theme.hover}`}
-                >
-                  {link.label}
-                  {link.megaMenu && (
-                    <ChevronDown
-                      size={14}
-                      className={`transition-transform duration-200 ${
-                        megaOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  )}
-                </button>
-                {/* Active underline */}
-                <span
-                  className={`pointer-events-none absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-indigo-500 transition-transform duration-300 ${
-                    activeLabel === link.label ? "scale-x-100" : "scale-x-0"
-                  }`}
-                />
-              </li>
-            ))}
-          </ul>
-
-          {/* Mega dropdown */}
-          <div
-            onMouseLeave={() => setMegaOpen(false)}
-            className={`absolute left-1/2 top-full mt-4 w-[520px] -translate-x-1/2 rounded-2xl border p-6 shadow-2xl transition-all duration-200 ${
-              theme.panel
-            } ${
-              megaOpen
-                ? "translate-y-0 opacity-100"
-                : "pointer-events-none -translate-y-2 opacity-0"
+        <div className="mx-auto flex h-14 items-center justify-between px-4 sm:px-5">
+          {/* Logo */}
+          <Link
+            href="/"
+            className={`text-lg font-semibold tracking-tight ${
+              dark ? "text-white" : "text-slate-950"
             }`}
           >
-            <div className="grid grid-cols-2 gap-6">
-              {MEGA_MENU_SECTIONS.map(({ icon: Icon, title, items }) => (
-                <div key={title}>
-                  <div className={`mb-2 flex items-center gap-2 text-sm font-semibold ${dark ? "text-white" : "text-slate-900"}`}>
-                    <Icon size={16} className="text-indigo-500" />
-                    {title}
-                  </div>
-                  <ul className="space-y-1">
-                    {items.map((item) => (
-                      <li key={item.label}>
-                        <a
-                          href={item.href}
-                          className={`block rounded px-2 py-1 text-sm ${theme.textMuted} ${theme.hover}`}
-                        >
-                          {item.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+            {logoText}
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="relative hidden md:block" ref={megaRef}>
+            <ul className="flex items-center gap-1">
+              {links.map((link) => (
+                <li key={link.label} className="relative">
+                  <Link
+                    href={link.href}
+                    onClick={() => handleNavClick(link)}
+                    onMouseEnter={() => link.megaMenu && setMegaOpen(true)}
+                    className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${theme.text} ${theme.hover}`}
+                  >
+                    {link.label}
+                    {link.megaMenu && (
+                      <ChevronDown
+                        size={14}
+                        className={`transition-transform duration-200 ${
+                          megaOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    )}
+                  </Link>
+                  {/* Active underline */}
+                  <span
+                    className={`pointer-events-none absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-indigo-500 transition-transform duration-300 ${
+                      activeLabel === link.label ? "scale-x-100" : "scale-x-0"
+                    }`}
+                  />
+                </li>
               ))}
-            </div>
-          </div>
-        </nav>
+            </ul>
 
-        {/* Right side controls */}
-        <div className="flex items-center gap-2">
-          {/* Search */}
-          <form onSubmit={submitSearch} className="hidden items-center sm:flex">
+            {/* Mega dropdown */}
             <div
-              className={`flex items-center overflow-hidden rounded-full transition-all duration-300 ${
-                searchOpen ? "w-48 px-3" : "w-9 px-0"
-              } ${searchOpen ? theme.input : ""}`}
+              onMouseLeave={() => setMegaOpen(false)}
+              className={`absolute left-1/2 top-full mt-4 w-[520px] -translate-x-1/2 rounded-2xl border p-6 shadow-2xl transition-all duration-200 ${
+                theme.panel
+              } ${
+                megaOpen
+                  ? "translate-y-0 opacity-100"
+                  : "pointer-events-none -translate-y-2 opacity-0"
+              }`}
             >
-              <button
-                type="button"
-                onClick={() => setSearchOpen((v) => !v)}
-                aria-label="Toggle search"
-                className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${theme.iconBtn}`}
-              >
-                <Search size={17} />
-              </button>
-              <input
-                ref={searchInputRef}
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                onBlur={() => !searchValue && setSearchOpen(false)}
-                placeholder="Search..."
-                className={`w-full bg-transparent text-sm outline-none transition-opacity duration-200 ${
-                  searchOpen ? "opacity-100" : "w-0 opacity-0"
-                }`}
-              />
+              <div className="grid grid-cols-2 gap-6">
+                {MEGA_MENU_SECTIONS.map(({ icon: Icon, title, items }) => (
+                  <div key={title}>
+                    <div
+                      className={`mb-2 flex items-center gap-2 text-sm font-semibold ${dark ? "text-white" : "text-slate-900"}`}
+                    >
+                      <Icon size={16} className="text-indigo-500" />
+                      {title}
+                    </div>
+                    <ul className="space-y-1">
+                      {items.map((item) => (
+                        <li key={item.label}>
+                          <Link
+                            href={item.href}
+                            className={`block rounded px-2 py-1 text-sm ${theme.textMuted} ${theme.hover}`}
+                          >
+                            {item.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
-          </form>
+          </nav>
 
-          {/* Theme toggle */}
-          <button
-            onClick={() => setDark((v) => !v)}
-            aria-label="Toggle theme"
-            className={`grid h-9 w-9 place-items-center rounded-full transition-colors ${theme.iconBtn}`}
-          >
-            {dark ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
-
-          {/* CTA */}
-          <a
-            href="#get-started"
-            className={`hidden rounded-full px-4 py-2 text-sm font-semibold transition-colors sm:inline-block text-white bg-amber-600`}
-          >
-            Get started
-          </a>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
-            className={`grid h-9 w-9 place-items-center rounded-full md:hidden ${theme.iconBtn}`}
-          >
-            <Menu size={19} />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile drawer */}
-      <div
-        className={`fixed inset-0 z-50 md:hidden ${
-          mobileOpen ? "pointer-events-auto" : "pointer-events-none"
-        }`}
-      >
-        {/* Backdrop */}
-        <div
-          onClick={() => setMobileOpen(false)}
-          className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
-            mobileOpen ? "opacity-100" : "opacity-0"
-          }`}
-        />
-        {/* Panel */}
-        <div
-          className={`absolute right-0 top-0 h-full w-72 border-l p-5 transition-transform duration-300 ${
-            theme.panel
-          } ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
-        >
-          <div className="mb-6 flex items-center justify-between">
-            <span className={`text-base font-semibold ${dark ? "text-white" : "text-slate-950"}`}>
-              {logoText}
-            </span>
-            <button
-              onClick={() => setMobileOpen(false)}
-              aria-label="Close menu"
-              className={`grid h-8 w-8 place-items-center rounded-full ${theme.iconBtn}`}
+          {/* Right side controls */}
+          <div className="flex items-center gap-2">
+            {/* Search */}
+            <form
+              onSubmit={submitSearch}
+              className="hidden items-center sm:flex"
             >
-              <X size={18} />
+              <div
+                className={`flex items-center overflow-hidden rounded-full transition-all duration-300 ${
+                  searchOpen ? "w-48 px-3" : "w-9 px-0"
+                } ${searchOpen ? theme.input : ""}`}
+              >
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen((v) => !v)}
+                  aria-label="Toggle search"
+                  className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${theme.iconBtn}`}
+                >
+                  <Search size={17} />
+                </button>
+                <input
+                  ref={searchInputRef}
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  onBlur={() => !searchValue && setSearchOpen(false)}
+                  placeholder="Search..."
+                  className={`w-full bg-transparent text-sm outline-none transition-opacity duration-200 ${
+                    searchOpen ? "opacity-100" : "w-0 opacity-0"
+                  }`}
+                />
+              </div>
+            </form>
+
+            {/* Theme toggle */}
+            <button
+              onClick={() => setDark((v) => !v)}
+              aria-label="Toggle theme"
+              className={`grid h-9 w-9 place-items-center rounded-full transition-colors ${theme.iconBtn}`}
+            >
+              {dark ? <Sun size={17} /> : <Moon size={17} />}
+            </button>
+
+            {/* CTA */}
+            <a
+              href="#get-started"
+              className={`hidden rounded-full px-4 py-2 text-sm font-semibold transition-colors sm:inline-block text-white bg-amber-600`}
+            >
+              Get started
+            </a>
+
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
+              className={`grid h-9 w-9 place-items-center rounded-full md:hidden ${theme.iconBtn}`}
+            >
+              <Menu size={19} />
             </button>
           </div>
-
-          <ul className="space-y-1">
-            {links.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  onClick={() => {
-                    handleNavClick(link);
-                    setMobileOpen(false);
-                  }}
-                  className={`block rounded-lg px-3 py-2.5 text-sm font-medium ${
-                    activeLabel === link.label
-                      ? "bg-indigo-500/10 text-indigo-500"
-                      : `${theme.text} ${theme.hover}`
-                  }`}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          <a
-            href="#get-started"
-            className={`mt-6 block rounded-full px-4 py-2.5 text-center text-sm font-semibold ${theme.cta}`}
-          >
-            Get started
-          </a>
         </div>
-      </div>
+
+        {/* Mobile drawer */}
+        <div
+          className={`fixed inset-0 z-50 md:hidden ${
+            mobileOpen ? "pointer-events-auto" : "pointer-events-none"
+          }`}
+        >
+          {/* Backdrop */}
+          <div
+            onClick={() => setMobileOpen(false)}
+            className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
+              mobileOpen ? "opacity-100" : "opacity-0"
+            }`}
+          />
+          {/* Panel */}
+          <div
+            className={`absolute right-0 top-0 h-full w-72 border-l p-5 transition-transform duration-300 ${
+              theme.panel
+            } ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <span
+                className={`text-base font-semibold ${dark ? "text-white" : "text-slate-950"}`}
+              >
+                {logoText}
+              </span>
+              <button
+                onClick={() => setMobileOpen(false)}
+                aria-label="Close menu"
+                className={`grid h-8 w-8 place-items-center rounded-full ${theme.iconBtn}`}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <ul className="space-y-1">
+              {links.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    onClick={() => {
+                      handleNavClick(link);
+                      setMobileOpen(false);
+                    }}
+                    className={`block rounded-lg px-3 py-2.5 text-sm font-medium ${
+                      activeLabel === link.label
+                        ? "bg-indigo-500/10 text-indigo-500"
+                        : `${theme.text} ${theme.hover}`
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href="#get-started"
+              className={`mt-6 block rounded-full px-4 py-2.5 text-center text-sm font-semibold ${theme.cta}`}
+            >
+              Get started
+            </a>
+          </div>
+        </div>
       </header>
     </div>
   );
