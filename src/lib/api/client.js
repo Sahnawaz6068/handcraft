@@ -1,6 +1,7 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL; 
 
 export async function apiFetch(path, { method = "GET", body, token, headers = {} } = {}) {
+
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers: {

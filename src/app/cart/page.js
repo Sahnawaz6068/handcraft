@@ -1,42 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
+import { getCart } from "@/lib/api/cart";
 
-const MOCK_CART = {
-  _id: "6a696bf4509755894b9e819c",
-  userId: "6a65a2f377be29a0d271c178",
-  items: [
-    {
-      productId: "6a4612943ce84c7148360bac",
-      vendorId: "6863c6d4b7f3e94d7b4b1234",
-      quantity: 2,
-      priceAtAdd: 6999,
-    },
-    {
-      productId: "6a4612863ce84c7148360bab",
-      vendorId: "6863c6d4b7f3e94d7b4b1234",
-      quantity: 2,
-      priceAtAdd: 899,
-    },
-  ],
-};
+// const MOCK_CART = {
+//   _id: "6a696bf4509755894b9e819c",
+//   userId: "6a65a2f377be29a0d271c178",
+//   items: [
+//     {
+//       productId: "6a4612943ce84c7148360bac",
+//       vendorId: "6863c6d4b7f3e94d7b4b1234",
+//       quantity: 2,
+//       priceAtAdd: 6999,
+//     },
+//     {
+//       productId: "6a4612863ce84c7148360bab",
+//       vendorId: "6863c6d4b7f3e94d7b4b1234",
+//       quantity: 2,
+//       priceAtAdd: 899,
+//     },
+//   ],
+// };
 
 export default function CartPage() {
-  const [items, setItems] = useState(MOCK_CART.items);
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCard = async () => {
+      try {
+        const res = await getCart();
+        setItems(res.successResponse?.data?.items??[]);
+
+        setItems(cart.items);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCard();
+  }, []);
 
   const totalAmount = items.reduce(
     (sum, item) => sum + item.priceAtAdd * item.quantity,
-    0
+    0,
   );
 
   const handleQuantityChange = (productId, quantity) => {
     setItems((prev) =>
       prev.map((item) =>
-        item.productId === productId ? { ...item, quantity } : item
-      )
+        item.productId === productId ? { ...item, quantity } : item,
+      ),
     );
   };
 
