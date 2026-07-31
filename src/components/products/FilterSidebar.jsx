@@ -1,5 +1,5 @@
 import { SlidersHorizontal } from "lucide-react";
-import { CATEGORIES, PRICE_MIN, PRICE_MAX } from "@/lib/constants";
+import { CATEGORIES, PRICE_MIN, PRICE_MAX } from "@/lib/api/constants";
 
 const FilterSidebar = ({
   selectedCategories,

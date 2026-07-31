@@ -4,7 +4,7 @@ import ProductCard from "@/components/products/ProductCard";
 import FilterSidebar from "@/components/products/FilterSidebar";
 import SearchBar from "@/components/products/SearchBar";
 import { RESPONSE_DATA } from "../../lib/mockData";
-import { PRICE_MIN, PRICE_MAX } from "@/lib/constants";
+import { PRICE_MIN, PRICE_MAX } from "@/lib/api/constants";
 import {getProducts } from "@/lib/api/product";
 
 const Page = () => {

@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
-import { getCart } from "@/lib/api/cart";
+import {
+  clearCart,
+  getCart,
+  removeCartItem,
+  updateCartItem,
+} from "@/lib/api/cart";
+import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
 // const MOCK_CART = {
 //   _id: "6a696bf4509755894b9e819c",
@@ -26,45 +33,60 @@ import { getCart } from "@/lib/api/cart";
 // };
 
 export default function CartPage() {
+  const { accessToken } = useAuth();
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchCard = async () => {
+    if (!accessToken) return;
+    const fetchCart = async () => {
       try {
-        const res = await getCart();
-        setItems(res.successResponse?.data?.items??[]);
-
-        setItems(cart.items);
+        const res = await getCart(accessToken);
+        setItems(res.items ?? []);
       } catch (err) {
         setError(err);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchCard();
-  }, []);
+    fetchCart();
+  }, [accessToken]);
 
   const totalAmount = items.reduce(
     (sum, item) => sum + item.priceAtAdd * item.quantity,
     0,
   );
 
-  const handleQuantityChange = (productId, quantity) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.productId === productId ? { ...item, quantity } : item,
-      ),
-    );
+  const handleQuantityChange = async (productId, quantity) => {
+    try {
+      const res = await updateCartItem(productId, quantity, accessToken);
+      setItems(res.items);
+      toast.success("Quntity changed");
+    } catch (err) {
+      console.error("Failed to update quantity", err);
+    }
   };
 
-  const handleRemove = (productId) => {
-    setItems((prev) => prev.filter((item) => item.productId !== productId));
+  const handleRemove = async (productId) => {
+    try {
+      const res = await removeCartItem(productId, accessToken);
+      setItems(res.items);
+      toast.success("Item Removed");
+    } catch (err) {
+      console.error("Failed to remove item", err);
+    }
   };
 
-  const handleClear = () => setItems([]);
-
+  const handleClear = async () => {
+    try {
+      const res = await clearCart(accessToken);
+      setItems(res.items);
+      toast.success("The cart is Empty now")
+    } catch (err) {
+      console.error("Failed to clear cart", err);
+    }
+  };
   const isEmpty = items.length === 0;
 
   if (isEmpty) {

@@ -21,3 +21,8 @@ export function resendOtp({ email }) {
 export function verifyOtp({ email, otp }) {
   return apiFetch("otp/verify", { method: "POST", body: { email, otp } });
 }
+
+
+export function getProfile (userId,token){
+  return apiFetch(`user/${userId}`,{token})
+}

@@ -1,62 +1,61 @@
 "use client";
-
-import React from "react";
-import {
-  Mail,
-  MapPin,
-  ShieldCheck,
-  Store,
-  BadgeCheck,
-  Pencil,
-} from "lucide-react";
-
-const user = {
-  vendorProfile: {
-    shopName: "Sahnawaz Jewels",
-    description: "Handcrafted gold and silver jewelry from artisans in Bihar",
-    logo: "https://img.magnific.com/free-vector/fashion-repair-service-logo-design_23-2150253063.jpg",
-    isApproved: true,
-    approvedAt: "2026-07-19T06:18:44.145Z",
-  },
-  _id: "6a464c9c9109392b9701617d",
-  name: "Zeeshan Khan",
-  email: "sahnawaz643786@gmail.com",
-  role: "vendor",
-  isVerified: true,
-  isActive: true,
-  addresses: [
-    {
-      lable: "Home",
-      line1: "House No. 12",
-      line2: "Near Gandhi Chowk",
-      city: "Muzaffarpur",
-      state: "Bihar",
-      pinCode: "842001",
-      country: "India",
-      isDefault: true,
-      _id: "6a464c9c9109392b9701617e",
-    },
-  ],
-  avtar: "https://cdn.phototourl.com/free/2026-07-21-6fb7419b-8e88-4742-a584-54d11659874f.jpg",
-  createdAt: "2026-07-02T11:33:48.430Z",
-  updatedAt: "2026-07-19T06:18:44.151Z",
-  venderProfile: {
-    isApproved: false,
-  },
-  lastLoginAt: "2026-07-19T04:52:55.733Z",
-};
-
+ 
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getProfile } from "@/lib/api/auth";
+import { useAuth } from "@/context/AuthContext";
+import { BadgeCheck, Mail, MapPin, Pencil, ShieldCheck, Store } from "lucide-react";
+ 
 const Page = () => {
-  const isVendor = user.role === "vendor" && user.vendorProfile;
-  const defaultAddress =
-    user.addresses?.find((a) => a.isDefault) || user.addresses?.[0];
+  const router = useRouter();
+  const { accessToken, user: authUser,loading } = useAuth();
+  const [profile, setProfile] = useState();
 
-  const initials = user.name
+    console.log(accessToken,authUser)
+
+ 
+  // redirect if auth has finished loading and there's no token/user
+  useEffect(() => {
+    if (!loading && (!accessToken || !authUser)) {
+      router.replace("/signin");
+    }
+  }, [loading, accessToken, authUser, router]);
+
+ 
+  useEffect(() => {
+    if (!accessToken || !authUser?._id) return;
+ 
+    const fetchProfile = async () => {
+      try {
+        const res = await getProfile(authUser._id, accessToken);
+        setProfile(res);
+      } catch (err) {
+        console.error("Failed to fetch profile", err);
+      }
+    };
+ 
+    fetchProfile();
+  }, [accessToken, authUser]);
+ 
+  if ( !accessToken || !authUser) {
+    return <div>Loading...</div>;
+  }
+ 
+  if (!profile) {
+    return <div>Loading profile...</div>;
+  }
+ 
+  const defaultAddress =
+    profile.addresses?.find((a) => a.isDefault) || profile.addresses?.[0];
+ 
+  const initials = profile.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
+ 
+  const isVendor = profile.role === "vendor" && profile.vendorProfile;
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#faf7f2]">
@@ -69,10 +68,10 @@ const Page = () => {
         <div className="rounded-3xl mt-10 bg-white p-8 shadow-2xl">
           <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-5">
-              {user.avtar ? (
+              {profile.avtar ? (
                 <img
-                  src={user.avtar}
-                  alt={user.name}
+                  src={profile.avtar}
+                  alt={profile.name}
                   className="h-20 w-20 rounded-full object-cover shadow-md"
                 />
               ) : (
@@ -84,9 +83,9 @@ const Page = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {user.name}
+                    {profile.name}
                   </h1>
-                  {user.isVerified && (
+                  {profile.isVerified && (
                     <BadgeCheck
                       className="h-5 w-5 text-amber-700"
                       aria-label="Verified"
@@ -95,10 +94,10 @@ const Page = () => {
                 </div>
                 <p className="mt-1 flex items-center gap-2 text-sm text-gray-500">
                   <Mail className="h-4 w-4" />
-                  {user.email}
+                  {profile.email}
                 </p>
                 <span className="mt-2 inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-medium capitalize text-amber-700">
-                  {user.role}
+                  {profile.role}
                 </span>
               </div>
             </div>
@@ -118,7 +117,7 @@ const Page = () => {
               <h2 className="text-lg font-semibold text-gray-900">
                 Shop details
               </h2>
-              {user.vendorProfile.isApproved && (
+              {profile.vendorProfile.isApproved && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
                   <ShieldCheck className="h-3.5 w-3.5" />
                   Approved
@@ -127,25 +126,25 @@ const Page = () => {
             </div>
 
             <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
-              {user.vendorProfile.logo && (
+              {profile.vendorProfile.logo && (
                 <img
-                  src={user.vendorProfile.logo}
-                  alt={user.vendorProfile.shopName}
+                  src={profile.vendorProfile.logo}
+                  alt={profile.vendorProfile.shopName}
                   className="h-20 w-20 rounded-2xl object-cover shadow-md"
                 />
               )}
               <div>
                 <h3 className="font-semibold text-gray-900">
-                  {user.vendorProfile.shopName}
+                  {profile.vendorProfile.shopName}
                 </h3>
                 <p className="mt-1 text-sm text-gray-600">
-                  {user.vendorProfile.description}
+                  {profile.vendorProfile.description}
                 </p>
-                {user.vendorProfile.approvedAt && (
+                {profile.vendorProfile.approvedAt && (
                   <p className="mt-2 text-xs text-gray-400">
                     Approved on{" "}
                     {new Date(
-                      user.vendorProfile.approvedAt
+                      profile.vendorProfile.approvedAt,
                     ).toLocaleDateString()}
                   </p>
                 )}
@@ -186,7 +185,7 @@ const Page = () => {
           </div>
 
           <div className="mt-5 space-y-4">
-            {user.addresses?.map((address) => (
+            {profile.addresses?.map((address) => (
               <div
                 key={address._id}
                 className="flex items-start justify-between rounded-2xl border border-gray-200 p-4"

@@ -2,27 +2,36 @@
 
 import { useState } from "react";
 import { Heart, Minus, Plus, Star, Truck, Gem } from "lucide-react";
+import { addCartItem } from "@/lib/api/cart";
+import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
-/*
-  product matches your schema:
-  _id, productName, slug, productDescription, price, discountPrice,
-  category, stockQuantity, rating, numReviews, productImageUrl[]
-*/
 export default function ProductDetail({ product }) {
+  const { accessToken } = useAuth();
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const productId = product._id;
 
   const hasDiscount =
     product.discountPrice && product.discountPrice < product.price;
   const discountPercent = hasDiscount
     ? Math.round(
-        ((product.price - product.discountPrice) / product.price) * 100
+        ((product.price - product.discountPrice) / product.price) * 100,
       )
     : 0;
   const inStock = product.stockQuantity > 0;
   const images = product.productImageUrl?.length
     ? product.productImageUrl
     : [null];
+
+  const handleAddCartItem = async (quantity) => {
+    try {
+      await addCartItem(productId, quantity, accessToken);
+      toast.success("Product added to cart")
+    } catch (err) {
+      console.log("failed to add to the cart");
+    }
+  };
 
   return (
     <section className="min-h-screen bg-[#faf7f2] px-6 py-24">
@@ -48,12 +57,18 @@ export default function ProductDetail({ product }) {
                   key={i}
                   onClick={() => setActiveImage(i)}
                   className={`h-16 w-16 rounded-lg bg-stone-100 flex items-center justify-center overflow-hidden border-2 transition-colors ${
-                    activeImage === i ? "border-amber-700" : "border-transparent"
+                    activeImage === i
+                      ? "border-amber-700"
+                      : "border-transparent"
                   }`}
                 >
                   {img ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={img} alt="" className="h-full w-full object-cover" />
+                    <img
+                      src={img}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
                   ) : (
                     <Gem className="h-5 w-5 text-amber-700/40" />
                   )}
@@ -132,6 +147,7 @@ export default function ProductDetail({ product }) {
             </div>
 
             <button
+              onClick={() => handleAddCartItem(quantity)}
               disabled={!inStock}
               className="flex-1 h-11 rounded-full border border-amber-700 text-amber-700 text-sm font-medium hover:bg-amber-50 disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
             >
