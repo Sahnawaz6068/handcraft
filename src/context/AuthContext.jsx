@@ -22,6 +22,7 @@ function authReducer(state, action) {
         loading: false,
         error: null,
       };
+    
     case "AUTH_ERROR":
       return { ...state, loading: false, error: action.payload, user: null, accessToken: null };
     case "LOGOUT":

@@ -1,30 +1,58 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { applyForVendor } from "@/lib/api/vendor";
-// import { applyForVendor } from "@/lib/api/vendor";
+import { getProfile } from "@/lib/api/auth";
 
 const Page = () => {
   const router = useRouter();
-  const { accessToken, user: authUser, loading,updateUser } = useAuth();
 
-  const [form, setForm] = useState({ shopName: "", description: "", logo: "" });
+  const { accessToken, user: authUser, loading, updateUser } = useAuth();
+
+  const [form, setForm] = useState({
+    shopName: "",
+    description: "",
+    logo: "",
+  });
+
+  //upar ham as user export kr rhe hai to authUser niche q use kr rhe hai
+  //2.user update q nhi ho rha ahi ab to api se update kr rha hu
+  // 3. ye update handle submite ke andr ho rha hai to ye kaise fetch krega
+  // updated user ko hme khi aur update krna hoga taki wo onsubmit pe dependent na rhe
+  //I think now it is the clear path
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  useEffect(() => {
+    async function onLoad() {
+      if (loading) return;
+
+      if (!accessToken || !authUser) {
+        router.replace("/signin");
+      }
+
+      const user = await getProfile(authUser._id, accessToken);
+      updateUser(user);
+    }
+    onLoad();
+  }, [loading, accessToken, authUser, router,updateUser]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
+  // Wait while redirecting
   if (!accessToken || !authUser) {
-    router.replace("/signin");
     return null;
   }
-
 
   const hasApplied = Boolean(authUser.vendorProfile?.shopName);
 
@@ -37,7 +65,8 @@ const Page = () => {
               ? "You're already a seller"
               : "Application pending"}
           </h1>
-          <p className="text-gray-500 mt-2">
+
+          <p className="mt-2 text-gray-500">
             {authUser.vendorProfile.isApproved
               ? "Your shop is live — head to your vendor dashboard to manage listings."
               : "Your seller application is under review. We'll notify you once it's approved."}
@@ -62,9 +91,11 @@ const Page = () => {
 
     setIsSubmitting(true);
     try {
-      const res = await applyForVendor(form, accessToken);
+      await applyForVendor(form, accessToken);
 
-      updateUser({ vendorProfile: res.vendorProfile ?? form });
+      const user = await getProfile(authUser._id, accessToken);
+
+      updateUser(user);
       setSuccess(true);
     } catch (err) {
       setError(err.message || "Something went wrong. Try again.");
@@ -99,8 +130,8 @@ const Page = () => {
       <div className="mx-auto max-w-lg">
         <h1 className="text-3xl font-bold text-gray-900">Become a seller</h1>
         <p className="text-gray-500 mt-2">
-          Tell us about your shop — we'll review your application before you
-          can start listing.
+          Tell us about your shop — we'll review your application before you can
+          start listing.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
