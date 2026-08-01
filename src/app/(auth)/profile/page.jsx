@@ -11,8 +11,6 @@ const Page = () => {
   const { accessToken, user: authUser,loading } = useAuth();
   const [profile, setProfile] = useState();
 
-    console.log(accessToken,authUser)
-
  
   // redirect if auth has finished loading and there's no token/user
   useEffect(() => {
@@ -111,7 +109,7 @@ const Page = () => {
 
         {/* Vendor Profile — only for vendors */}
         {isVendor && (
-          <div className="mt-6 rounded-3xl bg-white p-8 shadow-2xl">
+          <div onClick={()=>router.push('/vendor')} className="mt-6 rounded-3xl bg-white p-8 shadow-2xl">
             <div className="flex items-center gap-2">
               <Store className="h-5 w-5 text-amber-700" />
               <h2 className="text-lg font-semibold text-gray-900">
@@ -166,8 +164,8 @@ const Page = () => {
                 pieces on HandCraft.
               </p>
             </div>
-            <button className="whitespace-nowrap rounded-xl bg-amber-700 px-6 py-3 font-semibold text-white transition hover:bg-amber-800">
-              Apply to sell
+            <button onClick={()=>{router.push('/vendor/apply')}} className="whitespace-nowrap rounded-xl bg-amber-600 px-6 py-3 font-semibold text-white transition hover:bg-amber-800">
+              Become a seller.
             </button>
           </div>
         )}

@@ -19,7 +19,7 @@ const page = () => {
     avatar: "",
   });
 
-  const { signUp, signIn } = useAuth();
+  const { signUp } = useAuth();
   const router = useRouter();
 
   const handleChange = (e) => {

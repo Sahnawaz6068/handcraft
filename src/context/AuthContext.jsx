@@ -83,8 +83,18 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "LOGOUT" });
   }, []);
 
+   const updateUser = useCallback((partialUser) => {
+    dispatch({ type: "UPDATE_USER", payload: partialUser });
+ 
+    const stored = localStorage.getItem("user");
+    if (stored) {
+      const merged = { ...JSON.parse(stored), ...partialUser };
+      localStorage.setItem("user", JSON.stringify(merged));
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ ...state, signIn, signUp, logout }}>
+    <AuthContext.Provider value={{ ...state, signIn, signUp, logout,updateUser }}>
       {children}
     </AuthContext.Provider>
   );
