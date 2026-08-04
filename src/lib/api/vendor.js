@@ -23,6 +23,11 @@ export function getVendorDashboard(token) {
 export function getVendorProducts(token) {
   return apiFetch("vendor/products", { token });
 }
+
+export function getVendorProduct(productId, token) {
+  return apiFetch(`products/${productId}`, { token });
+}
+ 
  
 export function createVendorProduct(data, token) {
   return apiFetch("products", {
@@ -35,6 +40,15 @@ export function createVendorProduct(data, token) {
 export function deleteVendorProduct(productId, token) {
   return apiFetch(`products/${productId}`, {
     method: "DELETE",
+    token,
+  });
+}
+
+
+export function updateVendorProduct(productId, data, token) {
+  return apiFetch(`products/${productId}`, {
+    method: "PATCH",
+    body: data,
     token,
   });
 }

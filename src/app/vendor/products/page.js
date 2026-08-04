@@ -72,10 +72,11 @@ export default function VendorProductsPage() {
 
       {!isLoading && !error && products.length === 0 && (
         <div className="mt-16 text-center">
-          <Gem className="h-8 w-8 text-amber-700/40 mx-auto mb-3" strokeWidth={1.25} />
-          <p className="text-gray-500">
-            You haven't listed anything yet.
-          </p>
+          <Gem
+            className="h-8 w-8 text-amber-700/40 mx-auto mb-3"
+            strokeWidth={1.25}
+          />
+          <p className="text-gray-500">You haven't listed anything yet.</p>
           <Link
             href="/vendor/products/new"
             className="inline-block mt-4 text-sm text-amber-700 hover:text-amber-800 font-medium"
@@ -94,12 +95,16 @@ export default function VendorProductsPage() {
                 <th className="px-5 py-3 font-medium">Category</th>
                 <th className="px-5 py-3 font-medium">Price</th>
                 <th className="px-5 py-3 font-medium">Stock</th>
+                <th className="px-5 py-3 font-medium">Status</th>
                 <th className="px-5 py-3 font-medium"></th>
               </tr>
             </thead>
             <tbody>
               {products.map((product) => (
-                <tr key={product._id} className="border-b border-gray-100 last:border-0">
+                <tr
+                  key={product._id}
+                  className="border-b border-gray-100 last:border-0"
+                >
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-lg bg-stone-100 flex items-center justify-center overflow-hidden shrink-0">
@@ -111,7 +116,10 @@ export default function VendorProductsPage() {
                             className="h-full w-full object-cover"
                           />
                         ) : (
-                          <Gem className="h-4 w-4 text-amber-700/40" strokeWidth={1.25} />
+                          <Gem
+                            className="h-4 w-4 text-amber-700/40"
+                            strokeWidth={1.25}
+                          />
                         )}
                       </div>
                       <span className="text-gray-900 font-medium truncate max-w-[200px]">
@@ -123,7 +131,10 @@ export default function VendorProductsPage() {
                     {product.category}
                   </td>
                   <td className="px-5 py-4 text-gray-900">
-                    ₹{(product.discountPrice ?? product.price)?.toLocaleString("en-IN")}
+                    ₹
+                    {(product.discountPrice ?? product.price)?.toLocaleString(
+                      "en-IN",
+                    )}
                   </td>
                   <td className="px-5 py-4">
                     <span
@@ -131,11 +142,26 @@ export default function VendorProductsPage() {
                         product.stockQuantity <= 0
                           ? "text-red-600"
                           : product.stockQuantity <= 5
-                          ? "text-amber-700"
-                          : "text-gray-600"
+                            ? "text-amber-700"
+                            : "text-gray-600"
                       }
                     >
                       {product.stockQuantity}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
+                        product.status === "active"
+                          ? "bg-green-100 text-green-700"
+                          : product.status === "inactive"
+                            ? "bg-gray-100 text-gray-700"
+                            : product.status === "draft"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {product.status}
                     </span>
                   </td>
                   <td className="px-5 py-4">
