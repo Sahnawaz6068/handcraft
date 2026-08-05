@@ -1,17 +1,15 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import {
-  Search,
   Menu,
   X,
   ChevronDown,
-  Moon,
-  Sun,
   Layers,
   Zap,
   ShieldCheck,
   BarChart3,
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 import Link from "next/link";
 
@@ -19,7 +17,7 @@ const DEFAULT_LINKS = [
   { label: "Products", href: "/products" },
   { label: "Pricing", href: "/pricing" },
   { label: "Cart", href: "/cart" },
-  { label: "Company", href: "/company" },
+  { label: "Order", href: "/orders" },
 ];
 
 const MEGA_MENU_SECTIONS = [
@@ -65,13 +63,11 @@ const Navbar = ({
   const [scrolled, setScrolled] = useState(false);
   const [activeLabel, setActiveLabel] = useState(links[0]?.label);
   const [megaOpen, setMegaOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dark, setDark] = useState(false);
 
   const megaRef = useRef(null);
-  const searchInputRef = useRef(null);
+  const { user, isLoading } = useAuth();
 
   // Sticky background transition on scroll
   useEffect(() => {
@@ -103,10 +99,7 @@ const Navbar = ({
     };
   }, []);
 
-  // Focus the search input when it opens
-  useEffect(() => {
-    if (searchOpen) searchInputRef.current?.focus();
-  }, [searchOpen]);
+
 
   const theme = dark
     ? {
@@ -139,10 +132,7 @@ const Navbar = ({
     if (!link.megaMenu) setMegaOpen(false);
   };
 
-  const submitSearch = (e) => {
-    e.preventDefault();
-    onSearch?.(searchValue);
-  };
+
 
   return (
     <div className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
@@ -229,55 +219,24 @@ const Navbar = ({
             </div>
           </nav>
 
-          {/* Right side controls */}
           <div className="flex items-center gap-2">
-            {/* Search */}
-            <form
-              onSubmit={submitSearch}
-              className="hidden items-center sm:flex"
-            >
-              <div
-                className={`flex items-center overflow-hidden rounded-full transition-all duration-300 ${
-                  searchOpen ? "w-48 px-3" : "w-9 px-0"
-                } ${searchOpen ? theme.input : ""}`}
-              >
-                <button
-                  type="button"
-                  onClick={() => setSearchOpen((v) => !v)}
-                  aria-label="Toggle search"
-                  className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${theme.iconBtn}`}
+          
+            {!isLoading &&
+              (user ? (
+                <Link
+                  href="/profile"
+                  className="hidden rounded-full px-4 py-2 text-sm font-semibold transition-colors sm:inline-block text-white bg-amber-600"
                 >
-                  <Search size={17} />
-                </button>
-                <input
-                  ref={searchInputRef}
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  onBlur={() => !searchValue && setSearchOpen(false)}
-                  placeholder="Search..."
-                  className={`w-full bg-transparent text-sm outline-none transition-opacity duration-200 ${
-                    searchOpen ? "opacity-100" : "w-0 opacity-0"
-                  }`}
-                />
-              </div>
-            </form>
-
-            {/* Theme toggle */}
-            <button
-              onClick={() => setDark((v) => !v)}
-              aria-label="Toggle theme"
-              className={`grid h-9 w-9 place-items-center rounded-full transition-colors ${theme.iconBtn}`}
-            >
-              {dark ? <Sun size={17} /> : <Moon size={17} />}
-            </button>
-
-            {/* CTA */}
-            <a
-              href="#get-started"
-              className={`hidden rounded-full px-4 py-2 text-sm font-semibold transition-colors sm:inline-block text-white bg-amber-600`}
-            >
-              Get started
-            </a>
+                  Profile
+                </Link>
+              ) : (
+                <Link
+                  href="/signin"
+                  className="hidden rounded-full px-4 py-2 text-sm font-semibold transition-colors sm:inline-block text-white bg-amber-600"
+                >
+                  Get Started
+                </Link>
+              ))}
 
             {/* Mobile hamburger */}
             <button
@@ -344,13 +303,6 @@ const Navbar = ({
                 </li>
               ))}
             </ul>
-
-            <a
-              href="#get-started"
-              className={`mt-6 block rounded-full px-4 py-2.5 text-center text-sm font-semibold ${theme.cta}`}
-            >
-              Get started
-            </a>
           </div>
         </div>
       </header>

@@ -2,41 +2,31 @@
 
 import { useEffect, useState } from "react";
 import { ShoppingBag } from "lucide-react";
+import { useRouter } from "next/navigation";
 import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
+import { useAuth } from "@/context/AuthContext";
+
 import {
   clearCart,
   getCart,
   removeCartItem,
   updateCartItem,
 } from "@/lib/api/cart";
-import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 
-// const MOCK_CART = {
-//   _id: "6a696bf4509755894b9e819c",
-//   userId: "6a65a2f377be29a0d271c178",
-//   items: [
-//     {
-//       productId: "6a4612943ce84c7148360bac",
-//       vendorId: "6863c6d4b7f3e94d7b4b1234",
-//       quantity: 2,
-//       priceAtAdd: 6999,
-//     },
-//     {
-//       productId: "6a4612863ce84c7148360bab",
-//       vendorId: "6863c6d4b7f3e94d7b4b1234",
-//       quantity: 2,
-//       priceAtAdd: 899,
-//     },
-//   ],
-// };
-
 export default function CartPage() {
-  const { accessToken } = useAuth();
+  const router = useRouter();
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { accessToken, user: authUser, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && (!accessToken || !authUser)) {
+      router.replace("/signin");
+    }
+  }, [loading, accessToken, authUser, router]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -82,7 +72,7 @@ export default function CartPage() {
     try {
       const res = await clearCart(accessToken);
       setItems(res.items);
-      toast.success("The cart is Empty now")
+      toast.success("The cart is Empty now");
     } catch (err) {
       console.error("Failed to clear cart", err);
     }

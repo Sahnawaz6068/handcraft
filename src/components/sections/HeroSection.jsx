@@ -34,9 +34,9 @@ const HeroSection = () => {
               Shop Collection
             </Link>
 
-            <button className="rounded-xl border border-gray-300 bg-white px-8 py-4 font-semibold text-gray-800 transition hover:border-amber-700 hover:text-amber-700">
+            <Link href={"/signup"} className="rounded-xl border border-gray-300 bg-white px-8 py-4 font-semibold text-gray-800 transition hover:border-amber-700 hover:text-amber-700">
               Become a Seller
-            </button>
+            </Link>
           </div>
 
           <div className="mt-12 flex flex-wrap gap-10">

@@ -9,7 +9,7 @@ export function getProducts(query = "") {
 export function getProduct(slug) {
   return apiFetch(`products/slug/${slug}`);
 }
-
+ 
 // Create product (Vendor)
 export function createProduct(data, token) {
   return apiFetch("products", {

@@ -158,7 +158,7 @@ export default function ProductDetail({ product }) {
             </button>
           </div>
 
-          <button
+          <button onClick={()=>{}}
             disabled={!inStock}
             className="w-full mt-3 h-11 rounded-full bg-amber-700 text-white text-sm font-medium hover:bg-amber-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           >

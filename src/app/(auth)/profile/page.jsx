@@ -2,7 +2,7 @@
  
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getProfile } from "@/lib/api/auth";
+import { getProfile } from "@/lib/api/auth"; 
 import { useAuth } from "@/context/AuthContext";
 import { BadgeCheck, Mail, MapPin, Pencil, ShieldCheck, Store } from "lucide-react";
  
