@@ -4,30 +4,38 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Plus, Gem, Trash2, Pencil } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import { getVendorProducts, deleteVendorProduct } from "@/lib/api/vendor";
 
 export default function VendorProductsPage() {
-  const { accessToken } = useAuth();
+  const { accessToken, user: authUser, loading } = useAuth();
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+const router = useRouter();
 
-  useEffect(() => {
-    if (!accessToken) return;
+useEffect(() => {
+  if (loading) return;
 
-    const fetchProducts = async () => {
-      try {
-        const res = await getVendorProducts(accessToken);
-        setProducts(res.products ?? res ?? []);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchProducts();
-  }, [accessToken]);
+  if (!accessToken) {
+    router.replace("/signin");
+    return;
+  }
+
+  const fetchProducts = async () => {
+    try {
+      const res = await getVendorProducts(accessToken);
+      setProducts(res.products ?? res ?? []);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, [accessToken, authUser, loading]);
 
   const handleDelete = async (productId) => {
     if (!confirm("Delete this product? This can't be undone.")) return;

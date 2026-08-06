@@ -41,8 +41,7 @@ export default function VendorLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const hasApplied = !!authUser?.vendorProfile?.shopName;
-  console.log(authUser);
-  console.log(hasApplied);
+  
 
   useEffect(() => {
     setIsSidebarOpen(false);
