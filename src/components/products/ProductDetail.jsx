@@ -5,8 +5,10 @@ import { Heart, Minus, Plus, Star, Truck, Gem } from "lucide-react";
 import { addCartItem } from "@/lib/api/cart";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function ProductDetail({ product }) {
+  const router = useRouter();
   const { accessToken } = useAuth();
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -27,9 +29,10 @@ export default function ProductDetail({ product }) {
   const handleAddCartItem = async (quantity) => {
     try {
       await addCartItem(productId, quantity, accessToken);
-      toast.success("Product added to cart")
+      toast.success("Product added to cart");
     } catch (err) {
       console.log("failed to add to the cart");
+      router.push('/signin');
     }
   };
 
@@ -158,7 +161,8 @@ export default function ProductDetail({ product }) {
             </button>
           </div>
 
-          <button onClick={()=>{}}
+          <button
+            onClick={() => {}}
             disabled={!inStock}
             className="w-full mt-3 h-11 rounded-full bg-amber-700 text-white text-sm font-medium hover:bg-amber-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           >

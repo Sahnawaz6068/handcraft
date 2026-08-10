@@ -26,3 +26,11 @@ export function verifyOtp({ email, otp }) {
 export function getProfile (userId,token){
   return apiFetch(`user/${userId}`,{token})
 }
+
+export function updateProfile(userId,data,token){
+  return apiFetch(`user/${userId}`,{
+    method:"PATCH",
+    body:data,
+    token,
+  })
+}

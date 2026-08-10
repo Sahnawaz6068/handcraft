@@ -1,28 +1,30 @@
 "use client";
- 
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getProfile } from "@/lib/api/auth"; 
+import { getProfile } from "@/lib/api/auth";
 import { useAuth } from "@/context/AuthContext";
 import { BadgeCheck, Mail, MapPin, Pencil, ShieldCheck, Store } from "lucide-react";
- 
+import EditProfileModal from "@/components/EditProfileModal";
+import AddressModal from "@/components/AddressModal";
+
 const Page = () => {
   const router = useRouter();
-  const { accessToken, user: authUser,loading } = useAuth();
+  const { accessToken, user: authUser, loading } = useAuth();
   const [profile, setProfile] = useState();
 
- 
-  // redirect if auth has finished loading and there's no token/user
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [addressModal, setAddressModal] = useState(null); // null | "new" | address object
+
   useEffect(() => {
     if (!loading && (!accessToken || !authUser)) {
       router.replace("/signin");
     }
   }, [loading, accessToken, authUser, router]);
 
- 
   useEffect(() => {
     if (!accessToken || !authUser?._id) return;
- 
+
     const fetchProfile = async () => {
       try {
         const res = await getProfile(authUser._id, accessToken);
@@ -31,33 +33,29 @@ const Page = () => {
         console.error("Failed to fetch profile", err);
       }
     };
- 
+
     fetchProfile();
   }, [accessToken, authUser]);
- 
-  if ( !accessToken || !authUser) {
+
+  if (!accessToken || !authUser) {
     return <div>Loading...</div>;
   }
- 
+
   if (!profile) {
     return <div>Loading profile...</div>;
   }
- 
-  const defaultAddress =
-    profile.addresses?.find((a) => a.isDefault) || profile.addresses?.[0];
- 
+
   const initials = profile.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
- 
+
   const isVendor = profile.role === "vendor" && profile.vendorProfile;
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#faf7f2]">
-      {/* Background Blur */}
       <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-amber-200/30 blur-3xl" />
       <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-orange-200/20 blur-3xl" />
 
@@ -80,14 +78,9 @@ const Page = () => {
 
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {profile.name}
-                  </h1>
+                  <h1 className="text-2xl font-bold text-gray-900">{profile.name}</h1>
                   {profile.isVerified && (
-                    <BadgeCheck
-                      className="h-5 w-5 text-amber-700"
-                      aria-label="Verified"
-                    />
+                    <BadgeCheck className="h-5 w-5 text-amber-700" aria-label="Verified" />
                   )}
                 </div>
                 <p className="mt-1 flex items-center gap-2 text-sm text-gray-500">
@@ -100,21 +93,25 @@ const Page = () => {
               </div>
             </div>
 
-            <button className="flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-800 transition hover:border-amber-700 hover:text-amber-700">
+            <button
+              onClick={() => setShowEditProfile(true)}
+              className="flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-800 transition hover:border-amber-700 hover:text-amber-700"
+            >
               <Pencil className="h-4 w-4" />
               Edit profile
             </button>
           </div>
         </div>
 
-        {/* Vendor Profile — only for vendors */}
+        {/* Vendor Profile */}
         {isVendor && (
-          <div onClick={()=>router.push('/vendor')} className="mt-6 rounded-3xl bg-white p-8 shadow-2xl">
+          <div
+            onClick={() => router.push("/vendor")}
+            className="mt-6 rounded-3xl bg-white p-8 shadow-2xl cursor-pointer"
+          >
             <div className="flex items-center gap-2">
               <Store className="h-5 w-5 text-amber-700" />
-              <h2 className="text-lg font-semibold text-gray-900">
-                Shop details
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-900">Shop details</h2>
               {profile.vendorProfile.isApproved && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
                   <ShieldCheck className="h-3.5 w-3.5" />
@@ -141,9 +138,7 @@ const Page = () => {
                 {profile.vendorProfile.approvedAt && (
                   <p className="mt-2 text-xs text-gray-400">
                     Approved on{" "}
-                    {new Date(
-                      profile.vendorProfile.approvedAt,
-                    ).toLocaleDateString()}
+                    {new Date(profile.vendorProfile.approvedAt).toLocaleDateString()}
                   </p>
                 )}
               </div>
@@ -151,7 +146,7 @@ const Page = () => {
           </div>
         )}
 
-        {/* Become a vendor CTA — only for non-vendors */}
+        {/* Become a vendor CTA */}
         {!isVendor && (
           <div className="mt-6 flex flex-col items-start justify-between gap-4 rounded-3xl bg-white p-8 shadow-2xl sm:flex-row sm:items-center">
             <div>
@@ -160,11 +155,14 @@ const Page = () => {
                 Have a shop of your own?
               </h2>
               <p className="mt-1 text-sm text-gray-600">
-                Apply to become a vendor and start selling your handcrafted
-                pieces on HandCraft.
+                Apply to become a vendor and start selling your handcrafted pieces on
+                HandCraft.
               </p>
             </div>
-            <button onClick={()=>{router.push('/vendor/apply')}} className="whitespace-nowrap rounded-xl bg-amber-600 px-6 py-3 font-semibold text-white transition hover:bg-amber-800">
+            <button
+              onClick={() => router.push("/vendor/apply")}
+              className="whitespace-nowrap rounded-xl bg-amber-600 px-6 py-3 font-semibold text-white transition hover:bg-amber-800"
+            >
               Become a seller.
             </button>
           </div>
@@ -177,12 +175,19 @@ const Page = () => {
               <MapPin className="h-5 w-5 text-amber-700" />
               Addresses
             </h2>
-            <button className="text-sm font-semibold text-amber-700 hover:text-amber-800">
+            <button
+              onClick={() => setAddressModal("new")}
+              className="text-sm font-semibold text-amber-700 hover:text-amber-800"
+            >
               + Add address
             </button>
           </div>
 
           <div className="mt-5 space-y-4">
+            {profile.addresses?.length === 0 && (
+              <p className="text-sm text-gray-400">No addresses added yet.</p>
+            )}
+
             {profile.addresses?.map((address) => (
               <div
                 key={address._id}
@@ -190,9 +195,7 @@ const Page = () => {
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-900">
-                      {address.lable}
-                    </span>
+                    <span className="font-semibold text-gray-900">{address.lable}</span>
                     {address.isDefault && (
                       <span className="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
                         Default
@@ -208,7 +211,10 @@ const Page = () => {
                   </p>
                   <p className="text-sm text-gray-500">{address.country}</p>
                 </div>
-                <button className="text-sm font-medium text-gray-500 hover:text-amber-700">
+                <button
+                  onClick={() => setAddressModal(address)}
+                  className="text-sm font-medium text-gray-500 hover:text-amber-700"
+                >
                   Edit
                 </button>
               </div>
@@ -216,6 +222,26 @@ const Page = () => {
           </div>
         </div>
       </div>
+
+      {showEditProfile && (
+        <EditProfileModal
+          profile={profile}
+          userId={authUser._id}
+          accessToken={accessToken}
+          onClose={() => setShowEditProfile(false)}
+          onUpdated={(updated) => setProfile(updated)}
+        />
+      )}
+
+      {addressModal && (
+        <AddressModal
+          address={addressModal === "new" ? null : addressModal}
+          userId={authUser._id}
+          accessToken={accessToken}
+          onClose={() => setAddressModal(null)}
+          onUpdated={(updated) => setProfile(updated)}
+        />
+      )}
     </section>
   );
 };

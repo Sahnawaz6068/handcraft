@@ -4,6 +4,7 @@ export async function apiFetch(path, { method = "GET", body, token, headers = {}
 
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
