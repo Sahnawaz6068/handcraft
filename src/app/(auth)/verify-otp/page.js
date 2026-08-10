@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { verifyOtp, resendOtp } from "@/lib/api/auth";
 
 const RESEND_COOLDOWN = 30;
 
-export default function VerifyOtpPage() {
+function VerifyOtpForm() {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(0);
@@ -121,5 +121,13 @@ export default function VerifyOtpPage() {
         </p>
       </div>
     </section>
+  );
+}
+
+export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#faf7f2]">Loading...</div>}>
+      <VerifyOtpForm />
+    </Suspense>
   );
 }
